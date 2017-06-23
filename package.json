@@ -1,0 +1,17 @@
+{
+  "name": "xm-media-server",
+  "description": "xm-media-server",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "cloudinary": "^1.9.0",
+    "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.3",
+    "request": "^2.81.0"
+  }
+}
