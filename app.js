@@ -38,18 +38,16 @@ function search(req, res) {
     var query = new cloudinary.search();
     query.sort_by('created_at', 'desc');
 
-    //let expression = 'public_id:client/v2/' + req.query.type + '/*';
-    let expression = ' public_id:*' + req.query.value + '*';
+    let expression = 'public_id:client/v2/' + req.query.type + '/*';
+    //let expression = ' filename:' + req.query.value + '';
 
     if (req.query.value) {
-        //expression += ' AND public_id:\"*' + req.query.value + '*\"';
+        expression += ' AND filename:' + req.query.value;
     }
 
-    debugger;
     query.expression(expression);
 
     var result = query.execute().then(function(result) {
-        debugger;
         res.send(result);
     }, function(err) {
         res.send(err);
