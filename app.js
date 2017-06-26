@@ -27,71 +27,32 @@ app.listen(PORT, function () {
     console.log('Xm media server listening on port '+ PORT.toString() +'!');
 });
 
-app.get('/images', getImages.bind(this));
-app.get('/icons', getIcons.bind(this));
-app.get('/illustrations', getIllustrations.bind(this));
 app.get('/search', search);
 
 function search(req, res) {
-    debugger;
+    if (!req.query.type) {
+        res.send('No type provided.');
+        return;
+    }
+
     var query = new cloudinary.search();
     query.sort_by('created_at', 'desc');
-    query.expression('public_id:client/v2/illustrations/*');
 
-    var result = query.execute().then(function(result){
+    //let expression = 'public_id:client/v2/' + req.query.type + '/*';
+    let expression = ' public_id:*' + req.query.value + '*';
+
+    if (req.query.value) {
+        //expression += ' AND public_id:\"*' + req.query.value + '*\"';
+    }
+
+    debugger;
+    query.expression(expression);
+
+    var result = query.execute().then(function(result) {
         debugger;
-        res.send('asdf');
+        res.send(result);
+    }, function(err) {
+        res.send(err);
     });
 }
-
-function getImages(req, res) {
-    request({
-        url: CLOUDINARY_BASE + '?prefix=client/v2/images&max_results=500',
-        headers: headers
-    }, function (error, response, body) {
-        if (error) {
-            console.log('error:', error); // Print the error if one occurred
-            res.send(error);
-            return;
-        }
-        else {
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            res.send(body);
-        }
-    });
-};
-
-function getIcons(req, res) {
-    request({
-        url: CLOUDINARY_BASE + '?prefix=client/v2/icons&max_results=500',
-        headers: headers
-    }, function (error, response, body) {
-        if (error) {
-            console.log('error:', error); // Print the error if one occurred
-            res.send(error);
-            return;
-        }
-        else {
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            res.send(body);
-        }
-    });
-};
-
-function getIllustrations(req, res) {
-    request({
-        url: CLOUDINARY_BASE + '?prefix=client/v2/illustrations&max_results=500',
-        headers: headers
-    }, function (error, response, body) {
-        if (error) {
-            console.log('error:', error); // Print the error if one occurred
-            res.send(error);
-            return;
-        }
-        else {
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            res.send(body);
-        }
-    });
-};
 
